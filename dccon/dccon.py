@@ -101,15 +101,14 @@ class dccon:
         for name, image in image_dict.items():
             w, h = image.size
             wide = round(h / 13 * 22) // 2 * 2
-            f = Image.new('RGBA', (w + 2, h), 'lightgrey')
-            f.paste(
-                Image.alpha_composite(
+            if image.mode == 'RGBA':
+                image = Image.alpha_composite(
                     Image.new('RGBA', image.size, 'white'),
                     image
-                ),
-                (1, 0)
-            )
-            f2 = Image.new('RGBA', (wide, h), 'white')
+                )
+            f = Image.new(image.mode, (w + 2, h), 'lightgrey')
+            f.paste(image, (1, 0))
+            f2 = Image.new(image.mode, (wide, h), 'white')
             f2.paste(f, ((wide - w) // 2, 0))
             new_dict[name] = f2
         return new_dict
